@@ -18,12 +18,13 @@ animals_data = load_data('animals_data.json')
 def get_animal_info():
     out_put = ''
     for animal in animals_data:
-        out_put += f"Name: {animal['name']}\n"
-        out_put += f"Diet: {animal['characteristics']['diet']}\n"
-        out_put += f"Location: {animal['locations'][0]}\n"
+        out_put += '<li class="cards__item">'
+        out_put += f"Name: {animal['name']}<br/>\n"
+        out_put += f"Diet: {animal['characteristics']['diet']}<br/>\n"
+        out_put += f"Location: {animal['locations'][0]}<br/>\n"
         if animal['characteristics'].get('type'):
-            out_put += f"Type: {animal['characteristics']['type'].title()}\n "
-        out_put += f"\n"
+            out_put += f"Type: {animal['characteristics']['type'].title()}<br/>\n "
+        out_put += '</li>'
     return out_put
 
 filtered_animal_info = get_animal_info()
