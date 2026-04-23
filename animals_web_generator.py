@@ -32,12 +32,17 @@ def serialize_animal(animal_obj):
     location = animal_obj['locations'][0]
     temperament = animal_obj['characteristics'].get('temperament', 'NA.').title()
     type_ = animal_obj['characteristics'].get('type', 'NA.').title()
+    color = animal_obj['characteristics'].get('color','NA.').title()
+    habitat = animal_obj['characteristics'].get('habitat','NA.').title()
     name = animal_obj["name"]
 
     animal_charact = { 'Diet': diet,
                        'Location': location,
                        'Temperament': temperament,
-                       'Type': type_}
+                       'Type': type_,
+                       'Color': color,
+                       'Habitat': habitat
+                       }
 
     update_animal_char = [ f'<li class="animal-item"><strong>{key}: </strong>{value}</li>'
                            for key, value in animal_charact.items() if value != 'Na.']
@@ -50,21 +55,6 @@ def serialize_animal(animal_obj):
                f'</ul>\n'
                f'</div>\n'
                f'</li>\n')
-
-#    < li class ="cards__item" >
-#
-#    < div class ="card__title" > English Foxhound < / div >
-#
-#    < div class ="card__text" >
-#
-#    < ul >
-#    < li > < strong > Diet: < / strong > Carnivore < / li >
-#    < li > < strong > Location: < / strong > North - America and Canada < / li >
-#    < li > < strong > Type: < / strong > mammal < / li >
-#
-#< / ul >
-#< / div >
-#< / li >
 
     return out_put
 
@@ -82,11 +72,34 @@ def replace_animals_info(file_path,html_content, filtered_animal_info):
         new_file.write(html_with_animal_list)
 
 
+def skin_type_filter(animals_data):
+    skin_type_set = set()
+    for animal in animals_data:
+        if animal['characteristics'].get('skin_type') != None:
+            skin_type_set.add(animal['characteristics']['skin_type'])
+    return skin_type_set
+
+def skin_type_print(animals_data,user_input):
+    skin_type_select = [ animal  for animal in animals_data if animal['characteristics'].get('skin_type') == user_input ]
+    return skin_type_select
+
 def main():
     html_content = load_html_template('animals_template.html')
     animals_data = load_data('animals_data.json')
-    filtered_animal_info = get_animal_info(animals_data)
-    replace_animals_info("animals.html",html_content, filtered_animal_info)
+
+    skin_type_list = (skin_type_filter(animals_data))
+    print(list(skin_type_list))
+    user_input = input('Type one of the skin type from the list or "all": ').title()
+
+    if user_input == 'All':
+        filtered_animal_info = get_animal_info(animals_data)
+        replace_animals_info("animals.html", html_content, filtered_animal_info)
+    elif user_input in skin_type_list:
+        selected_animals = skin_type_print(animals_data,user_input)
+        filtered_animals_skin = get_animal_info(selected_animals)
+        replace_animals_info("selected_animals.html",html_content, filtered_animals_skin )
+    else:
+        print('Typing was not correct, By by!')
 
 if __name__ == "__main__":
     main()
