@@ -1,16 +1,17 @@
 import json
+from xml.etree.ElementTree import indent
 
 
 def load_html_template(file_path):
     """Read and return the full content of an HTML template file."""
-    with open(file_path, "r") as file:
+    with open(file_path, "r", encoding="utf-8",) as file:
         content = file.read()
         return content
 
 
 def load_data(file_path):
     """Load and return animal data from a JSON file."""
-    with open(file_path, "r") as handle:
+    with open(file_path, "r", encoding="utf-8",) as handle:
         return json.load(handle)
 
 
@@ -66,7 +67,7 @@ def update_animals_web(file_path, html_content, filtered_animal_info):
         '__REPLACE_ANIMALS_INFO__',
         filtered_animal_info
     )
-    with open(file_path, "w") as new_file:
+    with open(file_path, "w", encoding="utf-8") as new_file:
         new_file.write(html_with_animal_list)
 
 
